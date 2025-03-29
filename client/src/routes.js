@@ -5,15 +5,23 @@ import Loadable from './Loadable';
 const Home = Loadable(lazy(() => import('./components/pages/Home')));
 const About = Loadable(lazy(() => import('./components/pages/About')));
 const Help = Loadable(lazy(() => import('./components/pages/Help')));
-const FieldHelp = Loadable(lazy(() => import('./components/pages/FieldSearchHelp')));
+const FieldHelp = Loadable(
+    lazy(() => import('./components/pages/FieldSearchHelp'))
+);
 const Subjects = Loadable(lazy(() => import('./containers/Subjects')));
 const Authors = Loadable(lazy(() => import('./containers/Authors')));
 const LoginPage = Loadable(lazy(() => import('./components/pages/LoginPage')));
-const SignUpPage = Loadable(lazy(() => import('./components/pages/SignUpPage')));
+const SignUpPage = Loadable(
+    lazy(() => import('./components/pages/SignUpPage'))
+);
 const LogoutPage = Loadable(lazy(() => import('./containers/Logout')));
-const AccountPage = Loadable(lazy(() => import('./components/pages/AccountPage')));
+const AccountPage = Loadable(
+    lazy(() => import('./components/pages/AccountPage'))
+);
 const Manuscripts = Loadable(lazy(() => import('./containers/Manuscripts')));
-const NormalizedSubjects = Loadable(lazy(() => import('./containers/NormalizedSubjects')));
+const NormalizedSubjects = Loadable(
+    lazy(() => import('./containers/NormalizedSubjects'))
+);
 const Nisbas = Loadable(lazy(() => import('./containers/Nisbas')));
 const NotFound = Loadable(lazy(() => import('./components/pages/NotFound')));
 
@@ -22,7 +30,7 @@ export default (
         <Route
             exact
             path="/"
-            render={props => (
+            render={(props) => (
                 <Redirect
                     to={{
                         pathname: `/home`,

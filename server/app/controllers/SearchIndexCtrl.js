@@ -2,19 +2,16 @@ const { Author, Manuscript } = require('../models/index');
 const { removeArabicDiacritics } = require('../utils/db-query');
 
 const searchValue = (...values) =>
-    values
-        .filter(Boolean)
-        .map(removeArabicDiacritics)
-        .join('\n');
+    values.filter(Boolean).map(removeArabicDiacritics).join('\n');
 
 function authors(options) {
     return Author.findAll(options)
-        .then(list => {
+        .then((list) => {
             if (!list.length) {
                 return { done: true };
             }
             const requests = [];
-            list.forEach(author => {
+            list.forEach((author) => {
                 const { nisbas: search_nisba, ids: search_nisba_id } = author
                     .nisbas.length
                     ? author.nisbas.reduce(
@@ -48,19 +45,19 @@ function authors(options) {
                     logResponse(`Done indexing ${requests.length} records.`);
                     return { total: requests.length };
                 })
-                .catch(err => logResponse(err));
+                .catch((err) => logResponse(err));
         })
-        .catch(err => logResponse(err));
+        .catch((err) => logResponse(err));
 }
 
 function manuscripts(options) {
     return Manuscript.findAll(options)
-        .then(list => {
+        .then((list) => {
             if (!list.length) {
                 return { done: true };
             }
             const requests = [];
-            list.forEach(record => {
+            list.forEach((record) => {
                 const search_title = searchValue(
                     record.aTitle,
                     record.aAltTitle,
@@ -73,7 +70,7 @@ function manuscripts(options) {
                 let search_author_id = '';
                 let search_author_nisba_id = '';
                 if (record.authors.length) {
-                    record.authors.forEach(author => {
+                    record.authors.forEach((author) => {
                         search_author = searchValue(
                             search_author,
                             author.name,
@@ -150,9 +147,9 @@ function manuscripts(options) {
                     logResponse(`Done indexing ${requests.length} records.`);
                     return { total: requests.length };
                 })
-                .catch(err => logResponse(err));
+                .catch((err) => logResponse(err));
         })
-        .catch(err => logResponse(err));
+        .catch((err) => logResponse(err));
 }
 
 function logResponse(data) {
