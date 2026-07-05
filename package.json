@@ -30,7 +30,7 @@
   "scripts": {
     "clean": "rm -fr node_modules ./client/node_modules",
     "start": "concurrently \"npm run server\" \"npm run client\"",
-    "pm2:prod": "pm2 start --name amms-v2 --update-env server.js",
+    "pm2:prod": "pm2 start --name amms-v2 --node-args=\"--max-old-space-size=128\" --max-memory-restart 150M --update-env server.js",
     "pm2:reload": "pm2 reload --update-env amms-v2",
     "pm2:list": "pm2 list",
     "server": "node server.js",
