@@ -25,11 +25,11 @@ USER waam
 
 # Install server dependencies.
 COPY --chown=waam package.json package-lock.json ./
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Install client dependencies.
 COPY --chown=waam ./client/package.json ./client/package-lock.json ./client/
-RUN cd /usr/src/app/client && npm ci
+RUN cd /usr/src/app/client && npm ci --legacy-peer-deps
 
 # Build the client using Vite.
 COPY --chown=waam ./client/ ./client/
