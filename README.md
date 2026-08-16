@@ -26,7 +26,7 @@ npm install
 
 ## Running in Docker
 
-The default docker-compose configuration sets up three services:
+The default `compose.yml` sets up three services:
 
 - "node": The web application, bound to port 3002.
 - "db": The MySQL (well, MariaDB) database, bound to port 3306.
@@ -35,19 +35,19 @@ The default docker-compose configuration sets up three services:
 Only the "node" image is actually built, and is based on the Dockerfile in this directory. To build it:
 
 ```sh
-docker-compose build --pull
+docker compose build --pull
 ```
 
 To start the entire stack:
 
 ```sh
-docker-compose up -d
+docker compose up -d
 ```
 
 The node container uses `npm` as its entrypoint, so you can run commands like the indexer like so:
 
 ```sh
-docker-compose run --rm node run search-index
+docker compose run --rm node run search-index
 ```
 
 Note: Running the indexer commands is not needed on the live site, since the data there is readonly.
@@ -57,7 +57,7 @@ MySQL database test data is stored in a Docker volume. By default, the database 
 To stop the containers and start from scratch (removing volumes), run:
 
 ```sh
-docker-compose down -v
+docker compose down -v
 ```
 
 ## Starting development server
