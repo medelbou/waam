@@ -1,11 +1,23 @@
-const { Author, Manuscript } = require('../models/index');
+const { Author, Manuscript, Nisba, Subject } = require('../models/index');
 const { removeArabicDiacritics } = require('../utils/db-query');
 
 const searchValue = (...values) =>
     values.filter(Boolean).map(removeArabicDiacritics).join('\n');
 
 function authors(options) {
-    return Author.findAll(options)
+    // Override options to only select columns needed for indexing to prevent OOM
+    const optimizedOptions = {
+        ...options,
+        attributes: ['id', 'search_nisba', 'search_nisba_id'],
+        include: [{
+            model: Nisba,
+            as: 'nisbas',
+            attributes: ['id', 'nisba', 'aNisba'],
+            through: { attributes: [] }
+        }]
+    };
+
+    return Author.findAll(optimizedOptions)
         .then((list) => {
             if (!list.length) {
                 return { done: true };
@@ -51,7 +63,31 @@ function authors(options) {
 }
 
 function manuscripts(options) {
-    return Manuscript.findAll(options)
+    // Override options to only select columns needed for indexing to prevent OOM
+    const optimizedOptions = {
+        ...options,
+        attributes: [
+            'id', 'aTitle', 'aAltTitle', 'aAttrTitle',
+            'search_title', 'search_author', 'search_author_aka',
+            'search_author_date_died', 'search_author_nisba',
+            'search_author_id', 'search_author_nisba_id', 'search_subject'
+        ],
+        include: [
+            {
+                model: Author,
+                as: 'authors',
+                attributes: ['id', 'name', 'aName', 'altName', 'aAltName', 'aka', 'aAka', 'dateDied', 'search_nisba', 'search_nisba_id'],
+                through: { attributes: [] }
+            },
+            {
+                model: Subject,
+                as: 'subject',
+                attributes: ['id', 'subject', 'aSubject']
+            }
+        ]
+    };
+
+    return Manuscript.findAll(optimizedOptions)
         .then((list) => {
             if (!list.length) {
                 return { done: true };

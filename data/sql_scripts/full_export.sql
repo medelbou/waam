@@ -20,13 +20,13 @@ WHERE m.deletedAt IS NULL
 GROUP BY m.id LIMIT 20000 OFFSET 0;
 
 
--- ID	Name	Arabic Name	Alternative Name	Arabic Alternative Name	Library of Congress Name	Arabic Library of Congress Name	Also Known As	Arabic Also Known As	Documentation	Arabic Documentation	Primary Nisba ID	Secondary Nisba ID	Date of Death	Arabic Date of Death	Date of Birth	Arabic Date of Birth	Group ID	Reference Number	Hidden	All Associated Nisba IDs
+-- ID	Name	Arabic Name	Alternative Name	Arabic Alternative Name	Library of Congress Name	Arabic Library of Congress Name	Also Known As	Arabic Also Known As	Documentation	Arabic Documentation	All Nisba IDs	Date of Death	Arabic Date of Death	Date of Birth	Arabic Date of Birth	Group ID	Reference Number	Hidden
 SELECT 
     a.id, a.name, a.aName, a.altName, a.aAltName, a.LCName, a.ALCName, 
     a.aka, a.aAka, a.documentation, a.aDocumentation, a.nisbaId, 
     a.secNisbaId, a.dateDied, a.aDateDied, a.dateBorn, a.aDateBorn, 
     a.groupId, a.ref_number, a.hidden,
-    GROUP_CONCAT(DISTINCT an.nisbaId) AS all_nisba_ids
+    GROUP_CONCAT(DISTINCT CONCAT('[', an.nisbaId, ']') SEPARATOR '') AS all_nisba_ids
 FROM authors a
 LEFT JOIN authorNisbas an ON a.id = an.authorId
 WHERE a.deletedAt IS NULL
