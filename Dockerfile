@@ -1,6 +1,6 @@
 # =============================================================================
 # Target: "base"
-FROM node:16-alpine
+FROM node:20-alpine
 
 # Upgrade system packages and install runtime dependencies.
 RUN apk --no-cache --update upgrade \
@@ -16,7 +16,6 @@ RUN addgroup -Sg 40023 waam && \
     adduser -Su 40023 -G waam waam && \
     install -d -o waam -g waam /usr/src/app
 
-
 # Subsequent commands run relative to this directory.
 WORKDIR /usr/src/app
 
@@ -24,22 +23,17 @@ RUN chown -Rh waam:waam /home/node
 # Subsequent commands run as this non-root user.
 USER waam
 
-# Install Yarn
-RUN npm i -g corepack 
-    
 # Install server dependencies.
-COPY --chown=waam package.json ./
-COPY --chown=waam yarn.lock ./
-RUN yarn install
+COPY --chown=waam package.json package-lock.json ./
+RUN npm ci
 
 # Install client dependencies.
-COPY --chown=waam ./client/package.json ./client/
-COPY --chown=waam ./client/yarn.lock ./client/
-RUN cd /usr/src/app/client && yarn install
+COPY --chown=waam ./client/package.json ./client/package-lock.json ./client/
+RUN cd /usr/src/app/client && npm ci
 
-# Build the client.
+# Build the client using Vite.
 COPY --chown=waam ./client/ ./client/
-RUN cd /usr/src/app/client && yarn run build
+RUN cd /usr/src/app/client && npm run build
 
 # Copy the rest of the codebase.
 COPY --chown=waam . .
